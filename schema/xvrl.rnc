@@ -1,0 +1,173 @@
+# Schema for XML Validation Report Language; adapted from a proposal
+# by Matthieu Ricaud incorporating some suggestions by Gerrit Imsieke
+# See https://github.com/xproc/3.0-steps/issues/15
+
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+namespace xvrl = "http://www.xproc.org/ns/xvrl"
+default namespace = "http://www.xproc.org/ns/xvrl"
+namespace local = ""
+
+start = validation-reports
+
+xmllang.attr  = attribute xml:lang { xsd:language }
+xmlid.attr    = attribute xml:id { xsd:ID }
+xmlbase.attr  = attribute xml:base { xsd:anyURI }
+anyother.attr = attribute (* - (local:* | xvrl:* | xml:*)) { text }
+any.attr      = attribute (* - xvrl:*) { text }
+message.attr  = attribute (* - (xvrl:* | xml:*)) { text }
+
+common.attr   = xmllang.attr? & xmlid.attr? & xmlbase.attr? & anyother.attr*
+
+any.element =
+    element (* - xvrl:*) {
+      (any.attr | text | any.element)*
+  }
+
+message.element =
+    element (* - (xvrl:* - xvrl:value)) {
+      (message.attr | text | message.element | value)*
+  }
+
+
+validation-reports =
+    element validation-reports {
+        common.attr,
+        attribute href { xsd:anyURI }?,
+        validation-reports.metadata,
+        validation-report+
+    }
+
+validation-reports.metadata =
+    element metadata {
+        common.attr,
+        timestamp?,
+        title*,
+        summary*,
+        category*,
+        any.element*
+    }
+
+validation-report =
+    element validation-report {
+        common.attr,
+        attribute valid { xsd:boolean },
+        attribute errors { xsd:integer }?,
+        attribute warnings { xsd:integer }?,
+        attribute href { xsd:anyURI }?,
+        validation-report.metadata,
+        report+
+    }
+
+validation-report.metadata =
+    element metadata {
+        common.attr,
+        timestamp?,
+        validator,
+        title*,
+        summary*,
+        category*,
+        schema*,
+        any.element*
+    }
+
+report =
+    element report {
+        common.attr,
+        attribute severity { "info" | "warning" | "error" | "fatal-error" },
+        attribute href { xsd:anyURI }?,
+        attribute code { text }?,
+        location?,
+        let*,
+        title*,
+        summary*,
+        category*,
+        message+,
+        supplemental*
+    }
+    
+location =
+    element location {
+      (
+        attribute xpath {
+          xsd:string { pattern = "/?([^/]+/)*[^/]+" }?
+        }
+        |
+        (
+          # these are different syntaxes to address JSON documents:
+            attribute xpath-map-array { xsd:string }
+          | attribute json-pointer { xsd:string }
+          | attribute JsonPath { xsd:string }
+        )
+      )?,
+      attribute line { xsd:positiveInteger }?,
+      attribute column { xsd:positiveInteger }?,
+      attribute provenance { xsd:string }? 
+    }
+
+message =
+    element message {
+        common.attr,
+        attribute template { xsd:boolean }?,
+        (text | message.element)*
+    }
+
+let =
+    element let {
+        common.attr,
+        attribute name { xsd:QName },
+        (attribute value {xsd:string} | (text | any.element))*
+    }
+
+value =
+    element value {
+        common.attr,
+        attribute name { xsd:QName }
+    }
+
+
+
+supplemental =
+    element supplemental {
+        common.attr,
+        (text | any.element)*
+    }
+
+validator =
+    element validator {
+        common.attr,
+        attribute name { text },
+        attribute version { text }?
+    }
+
+schema =
+    element schema {
+        common.attr,
+        attribute href { xsd:anyURI }?,
+        attribute schematypens { xsd:anyURI },
+        attribute version { text }?
+    }
+
+title =
+    element title {
+        common.attr,
+        (text | any.element)*
+    }
+
+summary =
+    element summary {
+        common.attr,
+        (text | any.element)*
+    }
+
+category =
+    element category {
+        common.attr,
+        (text | any.element)*
+    }
+
+timestamp =
+    element timestamp {
+        common.attr,
+        xsd:dateTime
+    }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../schema/xvrl.rnc" type="application/relax-ng-compact-syntax"?>
+<validation-reports xmlns="http://www.xproc.org/ns/xvrl"
+  xmlns:xvrl="http://www.xproc.org/ns/xvrl">
+  <metadata>
+    <timestamp>2017-12-04T12:21:37.381+01:00</timestamp>
+  </metadata>
+  <validation-report valid="false" errors="2" warnings="0">
+    <metadata>
+      <validator name="jing" version="1.0"/>
+      <schema href="xxx.rng" schematypens="http://relaxng.org/ns/structure/1.0" version="1.0"/>
+    </metadata>
+    <report severity="error" code="error-code-xxx">
+      <location xpath="/foo/bar[1]/test[1]" line="11" column="22"/>
+      <message xml:lang="en">Error message</message>
+      <message xml:lang="fr">Message d’erreur</message>
+    </report>
+    <report severity="error" code="invalid_attribute_value">
+      <location xpath="/foo/bar[1]/test[2]" line="12" column="24"/>
+      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
+      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
+    </report>
+  </validation-report>
+  <validation-report valid="false" errors="2" warnings="0">
+    <metadata>
+      <validator name="saxon" version="9.8"/>
+      <schema href="my-schema.xsd" schematypens="http://www.w3.org/2001/XMLSchema" version="1.1"/>
+    </metadata>
+    <report severity="error" code="invalid_attribute_value">
+      <location xpath="/foo/bar[1]/test[2]" line="8" column="20"/>
+      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
+      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
+    </report>
+    <report severity="error" code="invalid_attribute_value">
+      <location xpath="/foo/bar[1]/test[3]" line="16" column="12"/>
+      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
+      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
+    </report>
+  </validation-report>
+  <validation-report  valid="false" errors="2" warnings="0">
+    <metadata>
+      <validator name="saxon" version="9.8"/>
+      <schema href="my-schema.sch" schematypens="http://xml.ascc.net/schematron/" version="1.5"/>
+    </metadata>
+    <report severity="error" code="bad-col-number">
+      <location line="8" column="20" xpath="/foo/bar[1]/table[1]"/>
+      <message xml:lang="en">Number of column is not correct</message>
+      <message xml:lang="fr">Le nombre de colonnes n'est pas correct</message>
+    </report>
+    <report severity="warning" code="sum-cols-should-be-100">
+      <location line="26" column="17" xpath="/foo/bar[1]/table[1]"/>
+      <message xml:lang="en"><p xmlns="http://www.w3.org/1999/xhtml">The sum of these column values should be equal to 100</p></message>
+      <message xml:lang="fr"><p xmlns="http://www.w3.org/1999/xhtml">La somme des valeurs de cette colonnes devrait être égale à 100</p></message>
+    </report>
+    <report severity="warning" code="sum-cols">
+      <location line="26" column="17" xpath="/foo/bar[1]/table[1]"/>
+      <let name="target" value="100"/>
+      <message xml:lang="en" template="true">The sum of these column values should be equal <value xmlns="http://www.xproc.org/ns/xvrl" name="target"/>.</message>
+      <message xml:lang="fr" template="true">La somme des valeurs de cette colonnes devrait être égale à <value name="target"/>.</message>
+    </report>
+  </validation-report>
+</validation-reports>
