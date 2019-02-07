@@ -163,6 +163,7 @@ summary =
 category =
     element category {
         common.attr,
+        attribute vocabulary { xsd:token }?,
         (text | any.element)*
     }
 

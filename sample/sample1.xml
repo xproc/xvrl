@@ -11,14 +11,19 @@
       <schema href="xxx.rng" schematypens="http://relaxng.org/ns/structure/1.0" version="1.0"/>
     </metadata>
     <report severity="error" code="error-code-xxx">
-      <location xpath="/foo/bar[1]/test[1]" line="11" column="22"/>
+      <location provenance="file:///C:/myfile.docx!word/document.xml?xpath=/w:document/w:body/w:p[12]"
+        xpath="/foo/bar[1]/test[1]" line="11" column="22"/>
       <message xml:lang="en">Error message</message>
       <message xml:lang="fr">Message d’erreur</message>
     </report>
-    <report severity="error" code="invalid_attribute_value">
+    <report severity="error" code="fake-smallcaps">
       <location xpath="/foo/bar[1]/test[2]" line="12" column="24"/>
-      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
-      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
+      <category vocabulary="typesetter-friendly" xml:lang="en">Typography</category>
+      <category vocabulary="typesetter-friendly" xml:lang="fr">Typographie</category>
+      <category vocabulary="programmer-friendly" xml:lang="en">ignorable</category>
+      <category vocabulary="programmer-friendly" xml:lang="fr">ignorable</category>
+      <message xml:lang="en">Don’t use font-size and all-capital letters to emulate small caps</message>
+      <message xml:lang="fr">Veuillez utiliser des petites capitales propres svp</message>
     </report>
   </validation-report>
   <validation-report valid="false" errors="2" warnings="0">
@@ -44,6 +49,7 @@
     </metadata>
     <report severity="error" code="bad-col-number">
       <location line="8" column="20" xpath="/foo/bar[1]/table[1]"/>
+      <category vocabulary="schematron-phase">production</category>
       <message xml:lang="en">Number of column is not correct</message>
       <message xml:lang="fr">Le nombre de colonnes n'est pas correct</message>
     </report>
@@ -55,8 +61,10 @@
     <report severity="warning" code="sum-cols">
       <location line="26" column="17" xpath="/foo/bar[1]/table[1]"/>
       <let name="target" value="100"/>
-      <message xml:lang="en" template="true">The sum of these column values should be equal <value xmlns="http://www.xproc.org/ns/xvrl" name="target"/>.</message>
-      <message xml:lang="fr" template="true">La somme des valeurs de cette colonnes devrait être égale à <value name="target"/>.</message>
+      <message xml:lang="en" template="true">The sum of these column values 
+        should be equal <value name="$target"/>.</message>
+      <message xml:lang="fr" template="true">La somme des valeurs de cette 
+        colonnes devrait être égale à <value name="$target"/>.</message>
     </report>
   </validation-report>
 </validation-reports>
