@@ -65,6 +65,7 @@
         should be equal <value name="$target"/>.</message>
       <message xml:lang="fr" template="true">La somme des valeurs de cette 
         colonnes devrait être égale à <value name="$target"/>.</message>
+      <supplemental></supplemental>
     </report>
   </validation-report>
 </validation-reports>
