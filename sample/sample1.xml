@@ -29,7 +29,10 @@
   </validation-report>
   <validation-report>
     <metadata>
-      <validator name="saxon" version="9.8"/>
+      <validator name="Saxon EE" version="9.8.0.1"/>
+      <creator name="Saxon HE" version="9.6.0.7">
+        <invocation>cd /home/jane/xsl &amp;&amp; ./saxon-HE-9.6.0.7 -s:foo.xml -xsl:bar.xsl -o out.xml</invocation>
+      </creator>
       <schema href="my-schema.xsd" schematypens="http://www.w3.org/2001/XMLSchema" version="1.1"/>
     </metadata>
     <report severity="error" code="invalid_attribute_value">

@@ -74,12 +74,14 @@ validation-report.metadata =
     element metadata {
         common.attr,
         timestamp?,
-        validator,
-        title*,
-        summary*,
-        category*,
-        schema*,
-        any.element*
+        (validator
+         & creator?
+         & title*
+         & summary*
+         & category*
+         & schema*
+         & any.element*
+        )
     }
 
 report =
@@ -149,6 +151,14 @@ validator =
         common.attr,
         attribute name { text },
         attribute version { text }?
+    }
+
+creator =
+    element creator {
+        common.attr,
+        attribute name { text },
+        attribute version { text }?,
+        element invocation { text }?
     }
 
 schema =
