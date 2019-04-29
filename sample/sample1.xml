@@ -5,11 +5,12 @@
   <metadata>
     <timestamp>2017-12-04T12:21:37.381+01:00</timestamp>
   </metadata>
-  <validation-report valid="false" errors="2" warnings="0">
+  <validation-report>
     <metadata>
       <validator name="jing" version="1.0"/>
       <schema href="xxx.rng" schematypens="http://relaxng.org/ns/structure/1.0" version="1.0"/>
     </metadata>
+    <digest valid="false" errors="2" warnings="0"/>
     <report severity="error" code="error-code-xxx">
       <location provenance="file:///C:/myfile.docx!word/document.xml?xpath=/w:document/w:body/w:p[12]"
         xpath="/foo/bar[1]/test[1]" line="11" column="22"/>
@@ -26,7 +27,7 @@
       <message xml:lang="fr">Veuillez utiliser des petites capitales propres svp</message>
     </report>
   </validation-report>
-  <validation-report valid="false" errors="2" warnings="0">
+  <validation-report>
     <metadata>
       <validator name="saxon" version="9.8"/>
       <schema href="my-schema.xsd" schematypens="http://www.w3.org/2001/XMLSchema" version="1.1"/>
@@ -41,8 +42,9 @@
       <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
       <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
     </report>
+    <digest valid="false" errors="2" warnings="0" fatal-errors="0"/>
   </validation-report>
-  <validation-report  valid="false" errors="2" warnings="0">
+  <validation-report>
     <metadata>
       <validator name="saxon" version="9.8"/>
       <schema href="my-schema.sch" schematypens="http://xml.ascc.net/schematron/" version="1.5"/>

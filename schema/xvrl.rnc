@@ -51,12 +51,23 @@ validation-reports.metadata =
 validation-report =
     element validation-report {
         common.attr,
-        attribute valid { xsd:boolean },
-        attribute errors { xsd:integer }?,
-        attribute warnings { xsd:integer }?,
         attribute href { xsd:anyURI }?,
         validation-report.metadata,
-        report+
+        ((digest?, report+) | (report+, digest) | digest)
+    }
+
+
+## All information in digest is understood to be aggregated at some point from the actual report elements. 
+## It is the responsibility of an XVRL creating/processing application to keep them up to date or to remove them 
+## when the underlying report information is changed. If the individual reports are omitted, a digest must be present. 
+## A digest may be inserted either before or after the report elements.
+digest =
+    element digest {
+        common.attr,
+        attribute valid { xsd:boolean }?,
+        attribute fatal-errors { xsd:integer }?,
+        attribute errors { xsd:integer }?,
+        attribute warnings { xsd:integer }?
     }
 
 validation-report.metadata =
