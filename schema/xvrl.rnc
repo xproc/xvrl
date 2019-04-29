@@ -64,7 +64,7 @@ validation-report =
 digest =
     element digest {
         common.attr,
-        attribute valid { xsd:boolean }?,
+        attribute valid { "true" | "false" | "partial" }?,
         attribute fatal-errors { xsd:integer }?,
         attribute errors { xsd:integer }?,
         attribute warnings { xsd:integer }?

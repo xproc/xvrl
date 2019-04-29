@@ -45,7 +45,7 @@
       <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
       <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
     </report>
-    <digest valid="false" errors="2" warnings="0" fatal-errors="0"/>
+    <digest valid="partial" errors="2" warnings="0" fatal-errors="0"/>
   </validation-report>
   <validation-report>
     <metadata>
