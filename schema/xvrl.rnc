@@ -13,11 +13,13 @@ start = validation-reports
 xmllang.attr  = attribute xml:lang { xsd:language }
 xmlid.attr    = attribute xml:id { xsd:ID }
 xmlbase.attr  = attribute xml:base { xsd:anyURI }
+# Default namespace URI for location XPaths:
+xpdns.attr    = attribute xpath-default-namespace { xsd:anyURI }
 anyother.attr = attribute (* - (local:* | xvrl:* | xml:*)) { text }
 any.attr      = attribute (* - xvrl:*) { text }
 message.attr  = attribute (* - (xvrl:* | xml:*)) { text }
 
-common.attr   = xmllang.attr? & xmlid.attr? & xmlbase.attr? & anyother.attr*
+common.attr   = xmllang.attr? & xmlid.attr? & xmlbase.attr? & xpdns.attr? & anyother.attr*
 
 any.element =
     element (* - xvrl:*) {
@@ -88,9 +90,9 @@ report =
     element report {
         common.attr,
         attribute severity { "info" | "warning" | "error" | "fatal-error" },
-        attribute href { xsd:anyURI }?,
         attribute code { text }?,
         location?,
+        provenance?,
         let*,
         title*,
         summary*,
@@ -101,21 +103,30 @@ report =
     
 location =
     element location {
-      (
-        attribute xpath {
-          xsd:string { pattern = "/?([^/]+/)*[^/]+" }?
-        }
-        |
-        (
-          # these are different syntaxes to address JSON documents:
-            attribute xpath-map-array { xsd:string }
-          | attribute json-pointer { xsd:string }
-          | attribute JsonPath { xsd:string }
-        )
-      )?,
+        location.model
+    }
+
+location.model =
+      xpdns.attr?,
+      # XPaths may use the Q{namespace-uri}local-name notation.
+      attribute xpath { text }?,
+      # These are different syntaxes to address JSON documents.
+      # JSON docs may be represented as XPath maps and arrays
+      # and then addressed via, e.g., xpath=".(3)('foo')"
+      # for the 3rd array item, which is a map, and then the map’s
+      # value for the 'foo' key.
+      attribute jsonpointer { text }?,
+      attribute jsonpath { text }?,
+      attribute href { xsd:anyURI}?,
       attribute line { xsd:positiveInteger }?,
       attribute column { xsd:positiveInteger }?,
-      attribute provenance { xsd:string }? 
+      # For binary data:
+      attribute octet-position { xsd:positiveInteger }?,
+      anyother.attr*
+
+provenance =
+    element provenance {
+        location.model
     }
 
 message =
