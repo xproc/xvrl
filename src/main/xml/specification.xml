@@ -1,0 +1,42 @@
+<?xml-model href="../../schema/dbspec.rng"
+  type="application/xml"
+  schematypens="http://relaxng.org/ns/structure/1.0" ?>
+<specification xmlns="http://docbook.org/ns/docbook"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+               xmlns:xi="http://www.w3.org/2001/XInclude"
+               xml:id='xvrl'
+               class="ed"
+               version="5.0-extension w3c-xproc">
+<info>
+<title>XVRL</title>
+<!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+<copyright><year>2018</year><year>2019</year><holder>@@FIXME:</holder></copyright>
+
+<bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+<authorgroup>
+  <author>
+    <personname>Jane Doe</personname>
+  </author>
+  <author>
+    <personname>Mary Jones</personname>
+  </author>
+</authorgroup>
+<abstract>
+<para>This is the abstract.</para>
+</abstract>
+
+<legalnotice role="status">
+<para><emphasis>This section describes the status of this document at
+the time of its publication. Other documents may supersede this
+document.</emphasis></para>
+</legalnotice>
+</info>
+
+<section xml:id="introduction">
+<title>Introduction</title>
+
+<para>An XVRL document…</para>
+</section>
+
+</specification>
