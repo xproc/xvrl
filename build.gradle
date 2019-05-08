@@ -1,0 +1,242 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://maven.restlet.org" }
+  }
+
+  // Get rid of that [expletive deleted] warning about xml-apis 2.0.2/1.0.b2
+  configurations.all {
+    resolutionStrategy {
+      force 'xml-apis:xml-apis:1.4.01'
+    }
+  }
+
+  dependencies {
+    classpath fileTree(dir: 'lib/', include: ['*.jar'])
+    classpath group: 'org.docbook', name: 'docbook-xslt2', version: docbookXsltVersion
+    classpath group: 'org.docbook', name: 'docbook-schemas', version: '5.1-1'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-print', version: '1.1.5'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-gradle', version: '1.3.5'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash', version: '1.1.23-98'
+    classpath group: 'org.xmlresolver', name: 'xmlresolver', version: '1.0.1'
+  }
+}
+
+plugins {
+  id "de.undercouch.download" version "3.4.3"
+  id "groovy"
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+// Get rid of that [expletive deleted] warning about xml-apis 2.0.2/1.0.b2
+configurations.all {
+  resolutionStrategy {
+    force 'xml-apis:xml-apis:1.4.01'
+    force 'org.xmlresolver:xmlresolver:1.0.1'
+  }
+}
+
+configurations {
+  tools {
+    description = "Run tools"
+    transitive = true
+  }
+}
+
+dependencies {
+  tools (
+    [group: 'org.relaxng', name: 'jing', version: '20181204'],
+    [group: 'org.relaxng', name: 'trang', version: '20181204']
+  )
+}
+
+defaultTasks 'allspecs'
+
+apply plugin: 'org.docbook.task'
+apply plugin: 'com.xmlcalabash.task'
+
+import org.docbook.DocBookTask
+import com.xmlcalabash.XMLCalabashTask
+import de.undercouch.gradle.tasks.download.Download
+
+// ======================================================================
+
+task allspecs(dependsOn: [ "buildspecs" ]) {
+}
+
+task buildspecs() {
+  // dependencies are added by the specs
+}
+
+def getenv(String name) {
+  if (System.getenv(name) == null) {
+    return ""
+  } else {
+    return System.getenv(name)
+  }
+}
+
+def deltaxml() {
+  def dxml = new File("deltaxml")
+  if (dxml.exists() && dxml.isDirectory()) {
+    return "diff"
+  } else {
+    return ""
+  }
+}
+
+// ======================================================================
+// Specification schemas
+
+task spec_schemas(dependsOn: [ "spec_rng", "spec_sch" ]) {
+  // nop
+}
+
+task spec_rng(type: JavaExec) {
+  inputs.files fileTree(dir: "schema/")
+  outputs.file "build/schema/dbspec.rng"
+
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["schema/dbspec.rnc", "build/schema/dbspec.rng"]
+
+  doFirst {
+    mkdir("build/schema")
+  }
+}
+
+task spec_sch(type: Copy) {
+  from('schema') {
+    include "docbook.sch"
+  }
+  into "build/schema"
+
+  doFirst {
+    mkdir("build/schema")
+  }
+}
+
+// ======================================================================
+// Specification
+
+task xinclude(dependsOn: [ "spec_schemas" ], type: XMLCalabashTask) {
+  inputs.files fileTree(dir: "src/main/xml/")
+  outputs.file "build/xinclude.xml"
+  input("source", "src/main/xml/specification.xml")
+  output("result", "build/xinclude.xml")
+  pipeline "tools/xpl/validate.xpl"
+
+  doFirst {
+    mkdir("build")
+  }
+}
+
+task source(dependsOn: ["glossary", "xinclude"], type: XMLCalabashTask) {
+  inputs.file "tools/xsl/masterbib.xsl"
+  inputs.file "src/main/xml/bibliography.xml"
+  inputs.file "src/main/xml/specification.xml"
+  inputs.file "build/glossary.xml"
+  outputs.file "build/source.xml"
+  input("source", "src/main/xml/specification.xml")
+  output("result", "build/source.xml")
+  pipeline "tools/xpl/validate.xpl"
+}
+
+task glossary(dependsOn: ["xinclude"], type: XMLCalabashTask) {
+  inputs.file "build/xinclude.xml"
+  inputs.file "tools/xpl/makeglossary.xpl"
+  inputs.file "tools/xsl/makeglossary.xsl"
+  outputs.file "build/glossary.xml"
+  input("source", "build/xinclude.xml")
+  output("result", "build/glossary.xml")
+  pipeline "tools/xpl/makeglossary.xpl"
+}
+
+task images(type: Copy) {
+  from 'src/main/graphics'
+  into 'build/graphics'
+  doFirst {
+    mkdir 'build/graphics'
+  }
+}
+
+task specification(dependsOn: [ "source" ]) {
+  // nop
+}
+
+task xvrl(dependsOn: [ "xvrl_schemas", "spec_schemas",
+                       "specification", "xvrl_src" ],
+             type: DocBookTask) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  input("source", "build/source.xml")
+  output("result", "build/dist/xvrl/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  option("diff", deltaxml())
+  option("specid", "xvrl")
+  option("diffloc", new File("build/dist/xvrl/diff.html").getAbsolutePath())
+  option("lcdiffloc", new File("build/dist/xvrl/lcdiff.html").getAbsolutePath())
+
+  pipeline "tools/xpl/formatspec.xpl"
+}
+buildspecs.dependsOn "xvrl"
+
+task xvrl_rnc(type: Copy) {
+  from('src/main/schema') {
+    include "xvrl.rnc"
+  }
+  into "build"
+
+  doFirst {
+    mkdir("build")
+  }
+}
+
+task xvrl_src(dependsOn: ["source"], type: Copy) {
+  from "build/"
+  into "build/dist/xvrl/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task xvrl_rng(dependsOn: [ "xvrl_rnc" ], type: JavaExec) {
+  inputs.file "build/xvrl.rnc"
+  outputs.file "build/xvrl.rng"
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["build/xvrl.rnc", "build/xvrl.rng"]
+}
+
+task xvrl_schemas(dependsOn: [ "xvrl_rnc", "xvrl_rng" ],
+                   type: JavaExec) {
+  inputs.file "tools/sample.xml"
+
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.util.Driver'
+  args = ["-i", "-c", "build/xvrl.rnc", "tools/sample.xml" ]
+}
+
+// ======================================================================
+// Clean up
+
+clean {
+  doFirst {
+    delete("build")
+  }
+}
+
