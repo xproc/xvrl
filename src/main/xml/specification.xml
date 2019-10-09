@@ -156,7 +156,7 @@
           <glossterm><tag>context</tag> element</glossterm>
           <glossdef>
             <para>The purpose of this element is to present a piece of content that surrounds the element that the detection
-              pertains to. It conteins an optional <tag linkend="v.location">location</tag> element, followed by (optional) 
+              pertains to. It contains an optional <tag linkend="v.location">location</tag> element, followed by (optional) 
               arbitrary text or non-XVRL element content.</para>
           </glossdef>
         </glossentry>
