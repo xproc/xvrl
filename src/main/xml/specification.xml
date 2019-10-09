@@ -164,12 +164,11 @@
           <glossterm><tag>location</tag></glossterm>
           <glossdef>
             <para>Within a single <tag>detection</tag> element, the location in the source document that the validation
-              error, warning, etc. pertains to is given by the <tag>location</tag> element’s attributes. It contains a
-              URI that points to the validated document.</para>
+              error, warning, etc. pertains to is given by the <tag>location</tag> element’s attributes.</para>
             <para>If not present, <tag role="attribute">href</tag> is taken from the closest ancestor’s
                 <code language="xpath">metadata/document/@href</code> attribute. If there are multiple <code language="xpath">document/@href</code>
               attributes in the closest ancestor’s metadata, the <tag role="attribute">href</tag> attribute should not
-              be omitted, or at least a disambiguating relative URI should be given in the <code language="xpath">location/@href</code>
+              be omitted on <tag>location</tag>, or at least a disambiguating relative URI should be given in the <code language="xpath">location/@href</code>
               attribute.</para>
             <para>The attribute <tag role="attribute">xpath</tag> contains an XPath expression that gives the location
               within the document. The in-scope value of the attribute <tag role="xpath-default-namespace">xpath</tag>
