@@ -110,7 +110,7 @@
                 (new-terminology) reports is now called “reports” (previously: “validation-reports”). I changed the
                 names because I didn’t think that both an individual finding and a collection of individual findings
                 should both be called a “report”, with the prefix “validation-” discerning between both. Since the
-                individual finding is also the result of a validation, there is no reason it could have called
+                individual finding is also the result of a validation, there is no reason it couldn’t have been called
                 “validation-report” in the first place. It took quite some time to come up with a term for the
                 individual findings. Candidates were: “finding”, “observation”, “detection”, “incidence”, and
                 “incident”. I’m willing to rename it to something that seems more fitting.</para>
