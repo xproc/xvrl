@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="../schema/xvrl.rnc" type="application/relax-ng-compact-syntax"?>
-<validation-reports xmlns="http://www.xproc.org/ns/xvrl"
+<reports xmlns="http://www.xproc.org/ns/xvrl"
   xmlns:xvrl="http://www.xproc.org/ns/xvrl" xmlns:my="http://acme.com/myns">
   <metadata>
     <timestamp>2017-12-04T12:21:37.381+01:00</timestamp>
+    <document href="file:///path/to/document-under-test.xml"/>
   </metadata>
-  <validation-report>
+  <report>
     <metadata>
       <validator name="jing" version="1.0"/>
       <schema href="xxx.rng" schematypens="http://relaxng.org/ns/structure/1.0" version="1.0"/>
     </metadata>
-    <digest valid="false" errors="2" warnings="0"/>
-    <report severity="error" code="error-code-xxx">
+    <digest valid="false" error-count="2" warning-count="0"/>
+    <detection severity="error" code="error-code-xxx">
       <location xpath="/foo/bar[1]/test[1]" line="11" column="22" my:loc="5,3,-2"/>
-      <provenance href="file:///C:/myfile.docx!word/document.xml" xpath="/w:document/w:body/w:p[12]"/>
+      <provenance >
+        <location href="file:///C:/myfile.docx!word/document.xml" xpath="/w:document/w:body/w:p[12]"/>
+      </provenance>
       <message xml:lang="en">Error message</message>
       <message xml:lang="fr">Message d’erreur</message>
-    </report>
-    <report severity="error" code="fake-smallcaps">
+    </detection>
+    <detection severity="error" code="fake-smallcaps">
       <location xpath="/foo/bar[1]/test[2]" line="12" column="24"/>
       <category vocabulary="typesetter-friendly" xml:lang="en">Typography</category>
       <category vocabulary="typesetter-friendly" xml:lang="fr">Typographie</category>
@@ -25,9 +28,9 @@
       <category vocabulary="programmer-friendly" xml:lang="fr">ignorable</category>
       <message xml:lang="en">Don’t use font-size and all-capital letters to emulate small caps</message>
       <message xml:lang="fr">Veuillez utiliser des petites capitales propres svp</message>
-    </report>
-  </validation-report>
-  <validation-report>
+    </detection>
+  </report>
+  <report>
     <metadata>
       <validator name="Saxon EE" version="9.8.0.1"/>
       <creator name="Saxon HE" version="9.6.0.7">
@@ -35,42 +38,51 @@
       </creator>
       <schema href="my-schema.xsd" schematypens="http://www.w3.org/2001/XMLSchema" version="1.1"/>
     </metadata>
-    <report severity="error" code="invalid_attribute_value">
+    <detection severity="error" code="invalid_attribute_value">
       <location xpath="/book/info[1]/chapter[2]" line="8" column="20" xpath-default-namespace="http://docbook.org/ns/docbook"/>
-      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
-      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
-    </report>
-    <report severity="error" code="invalid_attribute_value">
+      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "report"</message>
+      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "report"</message>
+    </detection>
+    <detection severity="error" code="invalid_attribute_value">
       <location xpath="/foo/bar[1]/test[3]" line="16" column="12"/>
-      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "yyy"</message>
-      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "yyy"</message>
-    </report>
-    <digest valid="partial" errors="2" warnings="0" fatal-errors="0"/>
-  </validation-report>
-  <validation-report>
+      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "report"</message>
+      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "report"</message>
+    </detection>
+    <digest valid="partial" error-count="2" warning-count="0" fatal-error-count="0"/>
+  </report>
+  <report>
     <metadata>
       <validator name="saxon" version="9.8"/>
       <schema href="my-schema.sch" schematypens="http://xml.ascc.net/schematron/" version="1.5"/>
     </metadata>
-    <report severity="error" code="bad-col-number">
+    <detection severity="error" code="bad-col-number">
       <location line="8" column="20" xpath="/foo/bar[1]/table[1]"/>
       <category vocabulary="schematron-phase">production</category>
       <message xml:lang="en">Number of column is not correct</message>
       <message xml:lang="fr">Le nombre de colonnes n'est pas correct</message>
-    </report>
-    <report severity="warning" code="sum-cols-should-be-100">
+    </detection>
+    <detection severity="warning" code="sum-cols-should-be-100">
       <location line="26" column="17" xpath="/foo/bar[1]/table[1]"/>
-      <message xml:lang="en"><p xmlns="http://www.w3.org/1999/xhtml">The sum of these column values should be equal to 100</p></message>
+      <xvrl:message xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">The sum of these column values should be equal to 100</xvrl:message>
       <message xml:lang="fr"><p xmlns="http://www.w3.org/1999/xhtml">La somme des valeurs de cette colonnes devrait être égale à 100</p></message>
-    </report>
-    <report severity="warning" code="sum-cols">
-      <location line="26" column="17" xpath="/foo/bar[1]/table[1]"/>
-      <let name="target" value="100"/>
-      <message xml:lang="en" template="true">The sum of these column values 
-        should be equal <value name="$target"/>.</message>
-      <message xml:lang="fr" template="true">La somme des valeurs de cette 
-        colonnes devrait être égale à <value name="$target"/>.</message>
-      <supplemental></supplemental>
-    </report>
-  </validation-report>
-</validation-reports>
+    </detection>
+    <detection severity="warning" code="sum-cols">
+      <location line="26" column="17" xpath="/foo/bar[1]/table[1]/tr[2]"/>
+      <context>
+        <location xpath="/foo/bar[1]/table[1]"/>
+        <table xmlns="">
+          <tr><th>A</th><th>B</th><th>C</th></tr>
+          <tr><td>50</td><td>30</td><td>20</td></tr>
+          <tr><td>49</td><td>40</td><td>10</td></tr>
+          <tr><td>25</td><td>34</td><td>41</td></tr>
+        </table>
+      </context>
+      <message xml:lang="en">The sum of these column values 
+        should be equal 100.</message>
+      <message xml:lang="fr">La somme des valeurs de cette 
+        colonnes devrait être égale à 100.</message>
+      <supplemental>Arbitrary content here.</supplemental>
+      
+    </detection>
+  </report>
+</reports>
