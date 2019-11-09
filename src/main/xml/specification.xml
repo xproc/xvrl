@@ -171,7 +171,7 @@
               be omitted on <tag>location</tag>, or at least a disambiguating relative URI should be given in the <code language="xpath">location/@href</code>
               attribute.</para>
             <para>The attribute <tag role="attribute">xpath</tag> contains an XPath expression that gives the location
-              within the document. The in-scope value of the attribute <tag role="xpath-default-namespace">xpath</tag>
+              within the document. The in-scope value of the attribute <tag role="attribute">xpath-default-namespace</tag>
               that is permitted on any element may give a namespace for the element names in this XPath expression.
               Apart from that, the <code language="xpath">Q{namespace-uri}local-name</code> syntax <rfc2119>should</rfc2119> be used, but
               in-scope namespace prefixes or XPath predicates like <code language="xpath">[namespace-uri() = 'uri']</code> may also be
