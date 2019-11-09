@@ -59,7 +59,7 @@
       <title>Document Structure</title>
       <glosslist>
         <glossentry xml:id="v.detection">
-          <glossterm><tag>detection</tag></glossterm>
+          <glossterm><tag>detection</tag> element</glossterm>
           <glossdef>
             <para>A single finding, typically with an associated error code and/or message(s). A <tag>report</tag>
               element primarily contains <tag>detection</tag> elements. See <xref linkend="xvrl-vocabulary-detection"/>
@@ -67,7 +67,7 @@
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.digest">
-          <glossterm><tag>digest</tag></glossterm>
+          <glossterm><tag>digest</tag> element</glossterm>
           <glossdef>
             <para>A <tag>report</tag> may contain a <tag>digest</tag> element in order to provide a summary of the
                 <tag>detection</tag> elements. For the distinct severity levels, counts of the <tag>detection</tag>
@@ -85,7 +85,7 @@
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.metadata">
-          <glossterm><tag>metadata</tag></glossterm>
+          <glossterm><tag>metadata</tag> element</glossterm>
           <glossdef>
             <para>Information about the time of validation, the validator used, the document(s) under test, etc. See
                 <xref linkend="xvrl-vocabulary-metadata"/> for details.</para>
@@ -98,7 +98,7 @@
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.report">
-          <glossterm><tag>report</tag></glossterm>
+          <glossterm><tag>report</tag> element</glossterm>
           <glossdef>
             <para>The result of a single validation method, typically using a single schema, typically applied to
               a single document (also referred to as the <firstterm>source document</firstterm>). The individual errors
@@ -118,7 +118,7 @@
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.reports">
-          <glossterm><tag>reports</tag></glossterm>
+          <glossterm><tag>reports</tag> element</glossterm>
           <glossdef>
             <para>A collection of <tag>report</tag> elements. It may contain the same <tag>metadata</tag> information as
               a single <tag>report</tag> in order to denote common information, for example if all validations have been
@@ -137,12 +137,14 @@
         <tag role="attribute" linkend="v.code">code</tag> attributes, and the following elements in arbitrary order:</para>
       <glosslist>
         <glossentry xml:id="v.category">
-          <glossterm><tag>category</tag></glossterm>
+          <glossterm><tag>category</tag> element(s)</glossterm>
           <glossdef>
             <para>In order to filter or group messages for a formatted report, individual <tag>detection</tag>s may be categorized
             according to arbitrary category systems, using the repeatable <tag>category</tag> element. Its optional attribute
             <tag role="attribute">vocabulary</tag> can hold a string that designates the category system. There are no 
               pre-defined values to choose from.</para>
+            <para>Categorization that applies to all <tag>detection</tag>s in a <tag>report</tag> can be included
+            in the <tag>report</tag>’s <tag>metadata</tag>.</para>
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.code">
@@ -161,7 +163,7 @@
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.location">
-          <glossterm><tag>location</tag></glossterm>
+          <glossterm><tag>location</tag> element</glossterm>
           <glossdef>
             <para>Within a single <tag>detection</tag> element, the location in the source document that the validation
               error, warning, etc. pertains to is given by the <tag>location</tag> element’s attributes.</para>
@@ -190,7 +192,7 @@
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.message">
-          <glossterm><tag>message</tag></glossterm>
+          <glossterm><tag>message</tag> element</glossterm>
           <glossdef>
             <para>An error message that pertains to a <tag>detection</tag>. There may be multiple <tag>message</tag>
               elements in a single <tag>detection</tag> element, typically to convey localized versions of essentially
@@ -206,7 +208,7 @@
           </glossdef>
         </glossentry>
         <glossentry xml:id="v.provenance">
-          <glossterm><tag>provenance</tag></glossterm>
+          <glossterm><tag>provenance</tag> element</glossterm>
           <glossdef>
             <para>In multi-step conversion pipelines it is sometimes required to save a common origin location that a portion
             of the validated document is derived from. This may be necessary in order to patch back error messages of later 
@@ -240,7 +242,7 @@
         <glossentry xml:id="v.summary">
           <glossterm><tag>summary</tag> element(s)</glossterm>
           <glossdef>
-            <para>An abstract of of a <tag>report</tag>, a <tag>reports</tag> collection, or an individual <tag>detection</tag>.
+            <para>An abstract of a <tag>report</tag>, a <tag>reports</tag> collection, or an individual <tag>detection</tag>.
               This element is repeatable, for example, in order to support multiple natural languages. In the context of
                 <tag>detection</tag>, it can serve as an abridged version of a full message that contains lengthy lists and the
               like.</para>
@@ -417,7 +419,7 @@
             <varlistentry>
               <term><literal>namespace-uri</literal></term>
               <listitem>
-                <para><code language="xpath">/TEI[namespace-uri()='http://www.tei-c.org/ns/1.0']/text[namespace-uri()='http://www.tei-c.org/ns/1.0'][1]</code></para>
+                <para><code language="xpath">/*:TEI[namespace-uri()='http://www.tei-c.org/ns/1.0']/*:text[namespace-uri()='http://www.tei-c.org/ns/1.0'][1]</code></para>
                 <para>This corresponds to the parameter setting <literal>full-path-notation=1</literal> in the SVRL output 
                   of the Schematron skeleton implementation.</para>
               </listitem>
