@@ -450,14 +450,14 @@
     <variablelist>
       <varlistentry>
         <term>SVRL → XVRL conversion</term>
-        <listitem>#
+        <listitem>
           <para>It is recommended that XProc processor vendors make this XSLT available under the import URI
           <uri>http://xproc.org/xvrl/xsl/svrl2xvrl.xsl</uri>.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
         <term><tag>c:errors</tag> → XVRL conversion</term>
-        <listitem>#
+        <listitem>
           <para>It is recommended that XProc processor vendors make this XSLT available under the import URI
           <uri>http://xproc.org/xvrl/xsl/c-errors2xvrl.xsl</uri>.</para>
         </listitem>
