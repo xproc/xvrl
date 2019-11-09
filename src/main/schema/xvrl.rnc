@@ -2,205 +2,161 @@
 # by Matthieu Ricaud incorporating some suggestions by Gerrit Imsieke
 # See https://github.com/xproc/3.0-steps/issues/15
 
-datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
-
-namespace xvrl = "http://www.xproc.org/ns/xvrl"
-default namespace = "http://www.xproc.org/ns/xvrl"
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
 namespace local = ""
+default namespace xvrl = "http://www.xproc.org/ns/xvrl"
 
-start = validation-reports
+start = reports | report
 
-xmllang.attr  = attribute xml:lang { xsd:language }
-xmlid.attr    = attribute xml:id { xsd:ID }
-xmlbase.attr  = attribute xml:base { xsd:anyURI }
+xmllang.attr = attribute xml:lang { xsd:language }
+xmlid.attr = attribute xml:id { xsd:ID }
+xmlbase.attr = attribute xml:base { xsd:anyURI }
 # Default namespace URI for location XPaths:
-xpdns.attr    = attribute xpath-default-namespace { xsd:anyURI }
-anyother.attr = attribute (* - (local:* | xvrl:* | xml:*)) { text }
-any.attr      = attribute (* - xvrl:*) { text }
-message.attr  = attribute (* - (xvrl:* | xml:*)) { text }
+xpdns.attr = attribute xpath-default-namespace { xsd:anyURI }
+anyother.attr = attribute * - (local:* | xvrl:* | xml:*) { text }
+any.attr = attribute * - xvrl:* { text }
 
-common.attr   = xmllang.attr? & xmlid.attr? & xmlbase.attr? & xpdns.attr? & anyother.attr*
+message.attr = attribute * - (xvrl:* | xml:*) { text }
 
-any.element =
-    element (* - xvrl:*) {
-      (any.attr | text | any.element)*
+common.attr =
+  xmllang.attr?
+  & xmlid.attr?
+  & xmlbase.attr?
+  & xpdns.attr?
+  & anyother.attr*
+
+href.attr =
+  attribute href { xsd:anyURI }
+  
+any.element = 
+  element * - xvrl:* { (any.attr | text | any.element)* }
+
+reports =
+  element reports {
+    common.attr,
+    report.metadata,
+    (report | reports | digest)+
   }
-
-message.element =
-    element (* - (xvrl:* - xvrl:value)) {
-      (message.attr | text | message.element | value)*
-  }
-
-
-validation-reports =
-    element validation-reports {
-        common.attr,
-        attribute href { xsd:anyURI }?,
-        validation-reports.metadata,
-        validation-report+
-    }
-
-validation-reports.metadata =
-    element metadata {
-        common.attr,
-        timestamp?,
-        title*,
-        summary*,
-        category*,
-        any.element*
-    }
-
-validation-report =
-    element validation-report {
-        common.attr,
-        attribute href { xsd:anyURI }?,
-        validation-report.metadata,
-        ((digest?, report+) | (report+, digest) | digest)
-    }
-
-
-## All information in digest is understood to be aggregated at some point from the actual report elements. 
-## It is the responsibility of an XVRL creating/processing application to keep them up to date or to remove them 
-## when the underlying report information is changed. If the individual reports are omitted, a digest must be present. 
-## A digest may be inserted either before or after the report elements.
-digest =
-    element digest {
-        common.attr,
-        attribute valid { "true" | "false" | "partial" }?,
-        attribute fatal-errors { xsd:integer }?,
-        attribute errors { xsd:integer }?,
-        attribute warnings { xsd:integer }?
-    }
-
-validation-report.metadata =
-    element metadata {
-        common.attr,
-        timestamp?,
-        (validator
-         & creator?
-         & title*
-         & summary*
-         & category*
-         & schema*
-         & any.element*
-        )
-    }
-
 report =
-    element report {
-        common.attr,
-        attribute severity { "info" | "warning" | "error" | "fatal-error" },
-        attribute code { text }?,
-        location?,
-        provenance?,
-        let*,
-        title*,
-        summary*,
-        category*,
-        message+,
-        supplemental*
-    }
-    
-location =
-    element location {
-        location.model
-    }
+  element report {
+    common.attr,
+    report.metadata,
+    ((digest?, detection+) | (detection+, digest) | digest)
+  }
 
+## All information in digest is understood to be aggregated at some point from the actual detection elements. 
+## It is the responsibility of an XVRL creating/processing application to keep them up to date or to remove them 
+## when the underlying detection information is changed. If the individual detections are omitted, a digest must be present. 
+## A digest may be inserted either before or after the detection elements.
+digest =
+  element digest {
+    common.attr,
+    attribute valid { "true" | "false" | "partial" | "undetermined" }?,
+    attribute fatal-error-count { xsd:integer }?,
+    attribute error-count { xsd:integer }?,
+    attribute warning-count { xsd:integer }?,
+    attribute info-count { xsd:integer }?,
+    attribute unspecified-count { xsd:integer }?,
+    attribute fatal-error-codes { list { token* } }?,
+    attribute error-codes { list { token* } }?,
+    attribute warning-codes { list { token* } }?,
+    attribute info-codes { list { token* } }?,
+    attribute unspecified-codes { list { token* } }?,
+    attribute worst { "fatal-error" | "error" | "warning" | "info" | "nothing" | "unspecified" }?
+  }
+report.metadata =
+  element metadata {
+    common.attr,
+    (timestamp?
+     & validator?
+     & creator?
+     & document*
+     & title*
+     & summary*
+     & category*
+     & schema*
+     & supplemental*)
+  }
+
+document = 
+  element document {
+    common.attr,
+    href.attr?,
+    (text | any.element)
+  }
+  
+detection =
+  element detection {
+    common.attr,
+    attribute severity { "info" | "warning" | "error" | "fatal-error" | "unspecified" }?,
+    attribute code { text }?,
+    (location?
+     & provenance?
+     & title*
+     & summary*
+     & category*
+     & message*
+     & supplemental*
+     & context?)
+  }
+
+location = element location { location.model }
 location.model =
-      xpdns.attr?,
-      # XPaths may use the Q{namespace-uri}local-name notation.
-      attribute xpath { text }?,
-      # These are different syntaxes to address JSON documents.
-      # JSON docs may be represented as XPath maps and arrays
-      # and then addressed via, e.g., xpath=".(3)('foo')"
-      # for the 3rd array item, which is a map, and then the map’s
-      # value for the 'foo' key.
-      attribute jsonpointer { text }?,
-      attribute jsonpath { text }?,
-      attribute href { xsd:anyURI}?,
-      attribute line { xsd:positiveInteger }?,
-      attribute column { xsd:positiveInteger }?,
-      # For binary data:
-      attribute octet-position { xsd:positiveInteger }?,
-      anyother.attr*
-
-provenance =
-    element provenance {
-        location.model
-    }
-
+  xpdns.attr?,
+  # XPaths may use the Q{namespace-uri}local-name notation.
+  attribute xpath { text }?,
+  # These are different syntaxes to address JSON documents.
+  # JSON docs may be represented as XPath maps and arrays
+  # and then addressed via, e.g., xpath=".(3)('foo')"
+  # for the 3rd array item, which is a map, and then the map’s
+  # value for the 'foo' key.
+  attribute jsonpointer { text }?,
+  attribute jsonpath { text }?,
+  attribute href { xsd:anyURI }?,
+  attribute line { xsd:positiveInteger }?,
+  attribute column { xsd:positiveInteger }?,
+  # For binary data:
+  attribute octet-position { xsd:positiveInteger }?,
+  anyother.attr*
+provenance = element provenance { location+ }
 message =
-    element message {
-        common.attr,
-        attribute template { xsd:boolean }?,
-        (text | message.element)*
-    }
-
-let =
-    element let {
-        common.attr,
-        attribute name { xsd:QName },
-        (attribute value {xsd:string} | (text | any.element))*
-    }
-
-value =
-    element value {
-        common.attr,
-        attribute name { xsd:QName }
-    }
-
-
-
+  element message {
+    common.attr,
+    (text | any.element)*
+  }
 supplemental =
-    element supplemental {
-        common.attr,
-        (text | any.element)*
-    }
-
+  element supplemental { common.attr, (text | any.element)* }
+context =
+  element context {
+  common.attr, location?, (text | any.element)* }
 validator =
-    element validator {
-        common.attr,
-        attribute name { text },
-        attribute version { text }?
-    }
-
+  element validator {
+    common.attr,
+    attribute name { text },
+    attribute version { text }?,
+    (text | any.element)*
+  }
 creator =
-    element creator {
-        common.attr,
-        attribute name { text },
-        attribute version { text }?,
-        element invocation { text }?
-    }
-
+  element creator {
+    common.attr,
+    attribute name { text },
+    attribute version { text }?,
+    element invocation { text }?
+  }
 schema =
-    element schema {
-        common.attr,
-        attribute href { xsd:anyURI }?,
-        attribute schematypens { xsd:anyURI },
-        attribute version { text }?
-    }
-
-title =
-    element title {
-        common.attr,
-        (text | any.element)*
-    }
-
-summary =
-    element summary {
-        common.attr,
-        (text | any.element)*
-    }
-
+  element schema {
+    common.attr,
+    attribute href { xsd:anyURI }?,
+    attribute schematypens { xsd:anyURI },
+    attribute version { text }?,
+    (text | any.element)?
+  }
+title = element title { common.attr, (text | any.element)* }
+summary = element summary { common.attr, (text | any.element)* }
 category =
-    element category {
-        common.attr,
-        attribute vocabulary { xsd:token }?,
-        (text | any.element)*
-    }
-
-timestamp =
-    element timestamp {
-        common.attr,
-        xsd:dateTime
-    }
+  element category {
+    common.attr,
+    attribute vocabulary { xsd:token }?,
+    (text | any.element)*
+  }
+timestamp = element timestamp { common.attr, xsd:dateTime }
