@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../schema/xvrl.rnc" type="application/relax-ng-compact-syntax"?>
+<?xml-model href="../src/main/schema/xvrl.rnc" type="application/relax-ng-compact-syntax"?>
 <reports xmlns="http://www.xproc.org/ns/xvrl"
   xmlns:xvrl="http://www.xproc.org/ns/xvrl" xmlns:my="http://acme.com/myns">
   <metadata>
