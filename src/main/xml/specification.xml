@@ -363,7 +363,7 @@
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><literal>xvrl:format</literal></term>
+        <term><literal>xvrl:serialization-format</literal></term>
         <listitem>
           <para>Anticipates future alternative serialization If no value is given, <literal>xml</literal> is assumed.
             Other possible values may be, but are not limited to, <literal>json</literal>, <literal>rdf/xml</literal>,

@@ -40,8 +40,9 @@
     </metadata>
     <detection severity="error" code="invalid_attribute_value">
       <location xpath="/book/info[1]/chapter[2]" line="8" column="20" xpath-default-namespace="http://docbook.org/ns/docbook"/>
-      <message xml:lang="en">value of attribute "test" is invalid; must be equal to "xxx" or "report"</message>
-      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à "xxx" ou "report"</message>
+      <let name="foo">"bar", "baz"</let>
+      <message xml:lang="en">value of attribute "test" is invalid; must be equal to one of: <value-of name="foo"/>.</message>
+      <message xml:lang="fr">La valeur de l'attribut "test" est invalide ; doit être égale à <value-of name="foo"/>.</message>
     </detection>
     <detection severity="error" code="invalid_attribute_value">
       <location xpath="/foo/bar[1]/test[3]" line="16" column="12"/>

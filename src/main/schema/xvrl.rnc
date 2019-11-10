@@ -15,8 +15,8 @@ xmlbase.attr = attribute xml:base { xsd:anyURI }
 xpdns.attr = attribute xpath-default-namespace { xsd:anyURI }
 anyother.attr = attribute * - (local:* | xvrl:* | xml:*) { text }
 any.attr = attribute * - xvrl:* { text }
+message.attr  = attribute (* - (xvrl:* | xml:*)) { text }
 
-message.attr = attribute * - (xvrl:* | xml:*) { text }
 
 common.attr =
   xmllang.attr?
@@ -95,10 +95,22 @@ detection =
      & title*
      & summary*
      & category*
-     & message*
+     & (let*, message*)
      & supplemental*
      & context?)
   }
+
+let =
+    element let {
+        common.attr,
+        attribute name { xsd:QName },
+        (attribute value {xsd:string} | (text | any.element))*
+    }
+
+value-of =
+    element value-of {
+        attribute name { xsd:QName }
+    }
 
 location = element location { location.model }
 location.model =
@@ -119,11 +131,17 @@ location.model =
   attribute octet-position { xsd:positiveInteger }?,
   anyother.attr*
 provenance = element provenance { location+ }
+
 message =
   element message {
     common.attr,
-    (text | any.element)*
+    (text | message.element)*
   }
+message.element =
+    element (* - (xvrl:* - xvrl:value-of)) {
+      (message.attr | text | message.element | value-of)*
+  }
+
 supplemental =
   element supplemental { common.attr, (text | any.element)* }
 context =
