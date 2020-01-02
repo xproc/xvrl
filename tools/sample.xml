@@ -1,9 +1,9 @@
-<validation-reports xmlns="http://www.xproc.org/ns/xvrl">
+<reports xmlns="http://www.xproc.org/ns/xvrl">
   <metadata/>
-  <validation-report>
+  <report>
     <metadata>
       <validator name="None"/>
     </metadata>
     <digest valid="partial"/>
-  </validation-report>
-</validation-reports>
+  </report>
+</reports>
