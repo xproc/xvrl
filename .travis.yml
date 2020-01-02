@@ -2,7 +2,7 @@ dist: xenial
 language: java
 jdk: openjdk12
 install: true
-script: ./gradlew
+script: ./gradlew --info
 
 before_install:
   - tools/difftools.sh
