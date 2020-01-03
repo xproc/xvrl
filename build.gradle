@@ -82,7 +82,7 @@ def getenv(String name) {
 }
 
 def deltaxml() {
-  def dxml = new File("deltaxml")
+  def dxml = file("deltaxml")
   if (dxml.exists() && dxml.isDirectory()) {
     return "diff"
   } else {
@@ -104,7 +104,6 @@ task spec_rng(type: JavaExec) {
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.translate.Driver'
   args = ["schema/dbspec.rnc", "build/schema/dbspec.rng"]
-
   doFirst {
     mkdir("build/schema")
   }
@@ -119,6 +118,25 @@ task spec_sch(type: Copy) {
   doFirst {
     mkdir("build/schema")
   }
+}
+
+// ======================================================================
+// XProc schemas (just make sure they're downloaded early)
+
+def schemaList = ["core30.rng",
+                  "xproc.rnc", "xproc.rng",
+                  "xproc10.rnc", "xproc10.rng",
+                  "xproc30.rnc", "xproc30.rng"]
+
+schemaList.each { schema ->
+  def taskname = "download_" + schema.replace(".", "_")
+  Task t = task "${taskname}"(type: Download) {
+    src "$grammarBaseUri/$schema"
+    dest "$buildDir/$schema"
+    doFirst { mkdir "$buildDir" }
+  }
+  t.onlyIf { ! file("$buildDir/$schema".toString()).exists() }
+  spec_schemas.dependsOn t
 }
 
 // ======================================================================
@@ -224,11 +242,11 @@ task xvrl_rng(dependsOn: [ "xvrl_rnc" ], type: JavaExec) {
 
 task xvrl_schemas(dependsOn: [ "xvrl_rnc", "xvrl_rng" ],
                    type: JavaExec) {
-  inputs.file "tools/sample.xml"
+  inputs.file "sample/sample1.xml"
 
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.util.Driver'
-  args = ["-i", "-c", "build/xvrl.rnc", "tools/sample.xml" ]
+  args = ["-i", "-c", "build/xvrl.rnc", "sample/sample1.xml" ]
 }
 
 // ======================================================================

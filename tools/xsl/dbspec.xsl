@@ -89,7 +89,9 @@
 <xsl:template match="db:glossterm">
   <xsl:variable name="term" select="string(.)"/>
   <xsl:variable name="anchorterm"
-                select="if (@baseform) then @baseform else normalize-space($term)"/>
+                select="if (@baseform)
+                        then normalize-space(@baseform)
+                        else normalize-space($term)"/>
   <xsl:variable name="anchor" select="translate($anchorterm,' ','-')"/>
   <xsl:variable name="termdef" select="key('id',concat('dt-', $anchor))"/>
 
@@ -239,6 +241,10 @@
   <xsl:call-template name="t:inline-monoseq"/>
 </xsl:template>
 
+<xsl:template match="db:property">
+  <xsl:call-template name="t:inline-monoseq"/>
+</xsl:template>
+
 <xsl:template match="db:tag[@class='attribute']" priority="10">
   <xsl:apply-imports/>
 </xsl:template>
@@ -368,6 +374,10 @@
 
 <!-- ============================================================ -->
 
+<xsl:template name="t:body-attributes">
+  <attribute name="class" select="'h-entry informative toc-sidebar'"/>
+</xsl:template>
+
 <xsl:template match="*" mode="m:css">
   <xsl:if test="$js-navigation">
     <script type="text/javascript" src="fg-menu/jquery-1.4.1.min.js"></script>
@@ -397,27 +407,43 @@
     </script>
   </xsl:if>
 
+  <link rel="stylesheet" type="text/css" href="css/base.css"/>
   <link rel="stylesheet" type="text/css" href="css/xproc.css"/>
-  <link rel="stylesheet" type="text/css" href="{$docbook.css}"/>
   <link rel="stylesheet" type="text/css" href="css/print.css" media="print"/>
 </xsl:template>
 
 <xsl:template match="*" mode="m:head-content">
   <xsl:param name="node" select="."/>
 
-  <xsl:variable name="info" select="/db:specification/db:info"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        name="viewport"/>
+  <link class="removeOnSave"
+        crossorigin="anonymous"
+        href="https://www.w3.org"
+        rel="preconnect"/>
+  <link as="script"
+        class="removeOnSave"
+        href="js/fixup.js"
+        rel="preload"/>
+  <link as="style"
+        class="removeOnSave"
+        href="css/base.css"
+        rel="preload"/>
+  <link as="image"
+        class="removeOnSave"
+        href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C"
+        rel="preload"/>
+  
+  <link rel="stylesheet"
+        href="css/cg-draft.css"/>
 
+  <link rel="stylesheet"
+        href="css/respec.css"/>
+
+  <xsl:variable name="info" select="/db:specification/db:info"/>
   <xsl:for-each select="$info/db:bibliorelation[@type='isformatof']">
     <link rel="alternate" title="{.}" href="{@xlink:href}"/>
   </xsl:for-each>
-
-  <link rel="alternate"
-	title="Latest editor's draft"
-	href="http://www.w3.org/XML/XProc/docs/langspec.html" />
-
-  <link rel="alternate"
-	title="Latest Public Working Draft"
-	href="http://www.w3.org/TR/xproc/" />
 
   <xsl:for-each select="$info/db:bibliorelation[@type='replaces']">
     <xsl:variable name="datestr" select="concat(substring(@xlink:href,36,4),
@@ -434,6 +460,10 @@
       </xsl:attribute>
     </link>
   </xsl:for-each>
+</xsl:template>
+
+<xsl:template match="*" mode="m:javascript-body">
+  <script src="js/fixup.js"/>
 </xsl:template>
 
 <xsl:template name="t:syntax-highlight-body">
@@ -779,7 +809,7 @@
   <xsl:variable name="xref" select="@xref/string()"/>
   <xsl:variable name="tocfn"
                 select="if (@spec = 'xvrl')
-                        then '../../build/toc.xml'
+                        then concat('../../', @spec, '/build/toc.xml')
                         else concat('../../build/', @spec, '/toc.xml')"/>
 
   <xsl:choose>
