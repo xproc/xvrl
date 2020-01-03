@@ -7,8 +7,8 @@ fi
 
 set | grep TRAVIS
 
-if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
-    echo "Preparing to publish..."
+if [ "$GIT_PUB_REPO" != "" ]; then
+    echo "Preparing to publish to $GIT_PUB_REPO..."
     cd $HOME
     git config --global user.email ${GIT_EMAIL}
     git config --global user.name ${GIT_NAME}
@@ -29,17 +29,11 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         mkdir -p ./${TRAVIS_BRANCH}/${TIP}
         cp -Rf $TRAVIS_BUILD_DIR/build/dist/* ./${TRAVIS_BRANCH}/${TIP}
 
-        if [ "$GITHUB_CNAME" != "" ]; then
-            echo $GITHUB_CNAME > CNAME
-        fi
-
         git add --verbose -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
-        echo NO ACTUAL PUSH
+        echo "NOT PUSHED"
         #git push -fq origin gh-pages > /dev/null
 
         echo -e "Published specification to gh-pages.\n"
-    else
-        echo -e "Publication cannot be performed on pull requests.\n"
     fi
 fi
