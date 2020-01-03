@@ -31,8 +31,7 @@ if [ "$GIT_PUB_REPO" != "" ]; then
 
         git add --verbose -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
-        echo "NOT PUSHED"
-        #git push -fq origin gh-pages > /dev/null
+        git push -fq origin gh-pages > /dev/null
 
         echo -e "Published specification to gh-pages.\n"
     fi
