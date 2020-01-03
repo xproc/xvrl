@@ -36,12 +36,9 @@
 <xsl:key name="errcode" match="db:error" use="@code"/>
 
 <xsl:template match="/">
-  <xsl:if test="/*/@xml:id">
-    <!-- This only works for a single spec, which is all we have at the moment ... -->
-    <xsl:result-document href="build/toc.xml" method="xml">
-      <xsl:apply-templates mode="make-toc-xml"/>
-    </xsl:result-document>
-  </xsl:if>
+  <xsl:result-document href="build/toc.xml" method="xml">
+    <xsl:apply-templates mode="make-toc-xml"/>
+  </xsl:result-document>
   <xsl:next-match/>
 </xsl:template>
 

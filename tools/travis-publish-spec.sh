@@ -5,6 +5,8 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     exit
 fi
 
+set | grep TRAVIS
+
 if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
     echo "Preparing to publish..."
     cd $HOME
@@ -31,15 +33,10 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
             echo $GITHUB_CNAME > CNAME
         fi
 
-        # Copy the homepage furniture to gh-pages
-        mkdir -p homepage
-        cp $TRAVIS_BUILD_DIR/src/homepage/index.html .
-        cp $TRAVIS_BUILD_DIR/src/homepage/homepage/* homepage/
-        date +"%d %B %Y" > pubdate
-
         git add --verbose -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
-        git push -fq origin gh-pages > /dev/null
+        echo NO ACTUAL PUSH
+        #git push -fq origin gh-pages > /dev/null
 
         echo -e "Published specification to gh-pages.\n"
     else
