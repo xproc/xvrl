@@ -1,5 +1,8 @@
-p code {
-    font-size: 120%;
+.editors-draft {
+    border: solid 1pt #808080;
+    padding: 1em;
+    background-color: #ffaaaa;
+    border-radius: 5px;
 }
 
 p.element-syntax code {
@@ -76,7 +79,7 @@ dl.errs dt {
     padding-bottom: 0.5ex;
 }
 
-.element-syntax                    { padding: 4px; }
+.element-syntax                    { padding: 4px; line-height: 1.25; }
 .element-syntax-declare-step       { border: solid thin;  background-color: #ffeeff }
 .element-syntax-declare-step-opt   { border: solid thin; background-color: #ffeeff }
 .element-syntax-declare-step-opt   { border: solid thin; background-color: #ffeeff }

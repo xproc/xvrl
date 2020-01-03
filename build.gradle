@@ -187,7 +187,7 @@ task specification(dependsOn: [ "source" ]) {
   // nop
 }
 
-task xvrl(dependsOn: [ "xvrl_schemas", "spec_schemas",
+task xvrl(dependsOn: [ "xvrl_schemas", "spec_schemas", 'xvrl_assets',
                        "specification", "xvrl_src" ],
              type: DocBookTask) {
   inputs.files fileTree(dir: "tools/xsl/")
@@ -247,6 +247,11 @@ task xvrl_schemas(dependsOn: [ "xvrl_rnc", "xvrl_rng" ],
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.util.Driver'
   args = ["-i", "-c", "build/xvrl.rnc", "sample/sample1.xml" ]
+}
+
+task xvrl_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/xvrl/"
 }
 
 // ======================================================================
