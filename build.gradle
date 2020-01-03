@@ -205,9 +205,8 @@ task xvrl(dependsOn: [ "xvrl_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", file("tools/xsl/xproc-specs.xsl"))
-  // Don't attempt to diff
-  option("diff", "")
-  option("specid", "")
+  option("diff", deltaxml())
+  option("specid", "xvrl")
   option("diffloc", file("build/dist/xvrl/diff.html").getAbsolutePath())
   option("lcdiffloc", file("build/dist/xvrl/lcdiff.html").getAbsolutePath())
 
