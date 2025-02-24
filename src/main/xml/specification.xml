@@ -1,4 +1,3 @@
-
 <?xml-model href="../../../schema/dbspec.rnc" type="application/relax-ng-compact-syntax"?>
 <specification xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="xvrl"
@@ -7,8 +6,8 @@
     <title>Extensible Validation Report Language (XVRL)</title>
     <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
     <copyright>
-      <year>2019</year>
-      <holder>@@FIXME:</holder>
+      <year>2018</year><year>2019</year><year>2020</year><year>2025</year>
+      <holder>the Contributors to the XVRL specification</holder> 
     </copyright>
 
     <bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
@@ -295,9 +294,19 @@
           <glossterm><tag>schema</tag> element(s)</glossterm>
           <glossdef>
             <para>The URI of a schema document may be specified in the <tag class="attribute">href</tag> attribute.
-              In addition or instead, the document may be given as the element content. The namespace of the 
-            schema may be given in the attribute <tag class="attribute">schematypens</tag>. The version of the 
-            schema language may be given in the attribute <tag class="attribute">version</tag>.</para>
+              In addition or instead, the document may be given as the element content.</para> 
+            <para>For schema languages that have a distinct XML namespace, the namespace of the schema may be 
+              given in the attribute <tag class="attribute">schematypens</tag>.</para>
+            <para>Some schema languages have a distinct content type. This can be conveyed in the 
+              attribute <tag class="attribute">content-type</tag>.</para>
+            <para>In addition or alternatively
+              to the aforementioned attributes, the schema language <rfc2119>may</rfc2119> be specified by a distinct token in 
+              the attribute <tag class="attribute">language</tag>. Tokens for well-known schema languages are
+            listed in <xref linkend="xvrl-schema-languages"/>. Schema languages that do not appear in <xref linkend="xvrl-schema-languages"/>
+              <rfc2119>should</rfc2119> be referred to by a <tag class="attribute">language</tag> token that is 
+            prefixed with <literal>x-</literal> and that contains a reasonably recognizable identifier for the given schema language.</para>
+            <para>The version of the 
+            schema language <rfc2119>may</rfc2119> be given in the attribute <tag class="attribute">version</tag>.</para>
           </glossdef>
         </glossentry>
         <glossentry>
@@ -342,6 +351,76 @@
   <appendix xml:id="xvrl-schema">
     <title>The XVRL Schema</title>
     <programlisting><xi:include href="../schema/xvrl.rnc" parse="text"></xi:include></programlisting>
+  </appendix>
+  
+  <appendix xml:id="xvrl-schema-languages">
+    <title>Well-known Schema Languages</title>
+    <para>The following schema languages can be referred to by language token in the <code language="xpath">schema/@language</code>
+    attribute:</para>
+    <informaltable>
+      <tgroup cols="4">
+        <thead>
+          <row>
+            <entry>Token (<code language="xpath">@language</code>)</entry>
+            <entry>Content Type (<code language="xpath">@content-type</code>)</entry>
+            <entry>Namespace (<code language="xpath">@schematypens</code>)</entry>
+            <entry>Specification</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>DTD</entry>
+            <entry>application/xml-dtd</entry>
+            <entry></entry>
+            <entry><biblioref linkend="xml10"/></entry>
+          </row>
+          <row>
+            <entry>XSD</entry>
+            <entry>application/xml</entry>
+            <entry>http://www.w3.org/2001/XMLSchema</entry>
+            <entry><biblioref linkend="xmlschema-1"/></entry>
+          </row>
+          <row>
+            <entry>RNG</entry>
+            <entry>application/xml</entry>
+            <entry>http://relaxng.org/ns/structure/1.0</entry>
+            <entry><biblioref linkend="iso19757-2"/></entry>
+          </row>
+          <row>
+            <entry>RNC</entry>
+            <entry>application/relax-ng-compact-syntax</entry>
+            <entry></entry>
+            <entry><biblioref linkend="relaxng-compact-syntax"/></entry>
+          </row>
+          <row>
+            <entry>Schematron</entry>
+            <entry>application/xml</entry>
+            <entry>http://purl.oclc.org/dsdl/schematron (ISO Schematron), http://xml.ascc.net/schematron/ (legacy Schematron up to version 1.5)</entry>
+            <entry><biblioref linkend="iso19757-3"/> (ISO Schematron)</entry>
+          </row>
+          <row>
+            <entry>NVDL</entry>
+            <entry>application/xml</entry>
+            <entry>http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0</entry>
+            <entry><biblioref linkend="iso19757-4"/></entry>
+          </row>
+          <row>
+            <entry>JSON</entry>
+            <entry>application/schema+json</entry>
+            <entry></entry>
+            <entry><biblioref linkend="jsonschema2020-12"/></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para>Appearance of a schema language in this list does not imply that an XVRL-producing validation application is required
+      to support validation with this language.</para>
+    <para>Applications that generate XVRL <rfc2119>should</rfc2119> choose appropriate <tag>schema</tag> attribute(s) to unambiguously convey the 
+      applied Schema language and its version.
+      They <rfc2119>may</rfc2119> use the namespace URI in order to identify an XML-syntax Schema language, or the content type for DTD, Relax NG Compact Syntax 
+      or JSON Schema, but they <rfc2119>may</rfc2119> also use the corresponding <tag class="attribute">language</tag> token.</para>
+    <para>Schema languages that do not appear in this list <rfc2119>should</rfc2119> be referred to by a <tag class="attribute">language</tag> 
+      attribute that is prefixed with <literal>x-</literal>, for example, <literal>x-jsontron</literal>.</para>
   </appendix>
   
   <appendix xml:id="xvrl-generation">
@@ -475,5 +554,17 @@
     <para>All stylesheets accept the parameters given in <xref linkend="xvrl-generation"/>.</para>
   </appendix>
     
+  <appendix xml:id="references">
+    <title>References</title>
+    <bibliolist>
+      <bibliomixed xml:id="xml10"/>
+      <bibliomixed xml:id="xmlschema-1"/>
+      <bibliomixed xml:id="iso19757-2"/>
+      <bibliomixed xml:id="relaxng-compact-syntax"/>
+      <bibliomixed xml:id="iso19757-3"/>
+      <bibliomixed xml:id="iso19757-4"/>
+      <bibliomixed xml:id="jsonschema2020-12"/>
+    </bibliolist>
+  </appendix>
 
 </specification>

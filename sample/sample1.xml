@@ -9,12 +9,12 @@
   <report>
     <metadata>
       <validator name="jing" version="1.0"/>
-      <schema href="xxx.rng" schematypens="http://relaxng.org/ns/structure/1.0" version="1.0"/>
+      <schema href="xxx.rng" schematypens="http://relaxng.org/ns/structure/1.0" version="1.0" language="RNG"/>
     </metadata>
     <digest valid="false" error-count="2" warning-count="0"/>
     <detection severity="error" code="error-code-xxx">
       <location xpath="/foo/bar[1]/test[1]" line="11" column="22" my:loc="5,3,-2"/>
-      <provenance >
+      <provenance>
         <location href="file:///C:/myfile.docx!word/document.xml" xpath="/w:document/w:body/w:p[12]"/>
       </provenance>
       <message xml:lang="en">Error message</message>
@@ -36,7 +36,7 @@
       <creator name="Saxon HE" version="9.6.0.7">
         <invocation>cd /home/jane/xsl &amp;&amp; ./saxon-HE-9.6.0.7 -s:foo.xml -xsl:bar.xsl -o out.xml</invocation>
       </creator>
-      <schema href="my-schema.xsd" schematypens="http://www.w3.org/2001/XMLSchema" version="1.1"/>
+      <schema href="my-schema.xsd" schematypens="http://www.w3.org/2001/XMLSchema" version="1.1" language="XSD"/>
     </metadata>
     <detection severity="error" code="invalid_attribute_value">
       <location xpath="/book/info[1]/chapter[2]" line="8" column="20" xpath-default-namespace="http://docbook.org/ns/docbook"/>
@@ -54,7 +54,7 @@
   <report>
     <metadata>
       <validator name="saxon" version="9.8"/>
-      <schema href="my-schema.sch" schematypens="http://xml.ascc.net/schematron/" version="1.5"/>
+      <schema href="my-schema.sch" schematypens="http://xml.ascc.net/schematron/" version="1.5" language="Schematron"/>
     </metadata>
     <detection severity="error" code="bad-col-number">
       <location line="8" column="20" xpath="/foo/bar[1]/table[1]"/>
@@ -83,7 +83,6 @@
       <message xml:lang="fr">La somme des valeurs de cette 
         colonnes devrait être égale à 100.</message>
       <supplemental>Arbitrary content here.</supplemental>
-      
     </detection>
   </report>
 </reports>

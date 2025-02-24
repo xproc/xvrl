@@ -165,7 +165,11 @@ schema =
   element schema {
     common.attr,
     attribute href { xsd:anyURI }?,
-    attribute schematypens { xsd:anyURI },
+    attribute language {  list {
+        (("DTD" | "XSD" | "RNG" | "RNC" | "Schematron" | "NVDL" | "JSON" )
+         | xsd:token { pattern = "x-[\-._/\w]+" } )} }?,
+    attribute content-type { xsd:token { pattern = "\w+/[\-.\w]+(\+[\-.\w]+)?" } }?,
+    attribute schematypens { xsd:anyURI }?,
     attribute version { text }?,
     (text | any.element)?
   }
