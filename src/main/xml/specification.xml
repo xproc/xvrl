@@ -419,8 +419,8 @@
       applied Schema language and its version.
       They <rfc2119>may</rfc2119> use the namespace URI in order to identify an XML-syntax Schema language, or the content type for DTD, Relax NG Compact Syntax 
       or JSON Schema, but they <rfc2119>may</rfc2119> also use the corresponding <tag class="attribute">language</tag> token.</para>
-    <para>Schema languages that do not appear in this list <rfc2119>should</rfc2119> be referred to by a <tag class="attribute">language</tag> that is 
-    prefixed with <literal>x-</literal>, for example, <literal>x-jsontron</literal>.</para>
+    <para>Schema languages that do not appear in this list <rfc2119>should</rfc2119> be referred to by a <tag class="attribute">language</tag> 
+      attribute that is prefixed with <literal>x-</literal>, for example, <literal>x-jsontron</literal>.</para>
   </appendix>
   
   <appendix xml:id="xvrl-generation">
